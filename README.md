@@ -1,5 +1,2 @@
-
-# Griddy
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut egestas sollicitudin urna, non semper nulla. Maecenas iaculis nisl ac ex posuere, et finibus velit interdum.
 # git-cat
+A fun project I started to get familiar with the svg api. My aim was to use no animation libraries and hand roll all the animations myself including the easing function.
