@@ -23,6 +23,12 @@ const getAttributeValue = (element: Element, attribute: string): string => {
   return element.getAttribute(attribute)
 }
 
+const allQuadraticCurves = (elements: HTMLCollectionOf<Element>): Element[] => (
+  Array.prototype.map.call(elements, (trackedElement: Element) => {
+    return extractQuadraticCurve(trackedElement)
+  })
+)
+
 interface TrackerConfig {
   trackedElements: HTMLCollectionOf<Element>;
   displayTrackedElements: boolean;
@@ -32,9 +38,13 @@ interface TrackerConfig {
 export class Tracker {
   private _trackedElements: HTMLCollectionOf<Element>
 
-  private _displayControlPoints
+  private _displayControlPoints: Boolean
 
   private _displayTrackedElements: boolean
+
+  private _currentTopEyeQuadraticY: string
+
+  private _currentBottomEyeQuadraticY: string
 
   private _displayElements = (elements: HTMLElement[] | HTMLCollectionOf<Element>) => {
     Array.prototype.map.call(elements, (element: HTMLElement) => {
@@ -44,7 +54,12 @@ export class Tracker {
   private _updateControlPointsY = () => {
     for (let i = 0; i < this._trackedElements.length; i++) {
       const quadraticYValue: string = extractQuadraticYAxis(extractQuadraticCurve(this._trackedElements[i]))
-      const trackedElementId = getAttributeValue(this._trackedElements[i], 'id')
+      const trackedElementId: string = getAttributeValue(this._trackedElements[i], 'id')
+      if (trackedElementId.includes("top")) { 
+        this._currentTopEyeQuadraticY = quadraticYValue
+      } else {
+        this._currentBottomEyeQuadraticY = quadraticYValue
+      }
       const trackedElementMarker = document.getElementById(`${trackedElementId}-marker`)
       trackedElementMarker.setAttribute('cy', quadraticYValue)
     }
@@ -72,14 +87,8 @@ export class Tracker {
     return elements
   }
 
-  extractCoordinates = (): string[] => (
-    Array.prototype.map.call(this._trackedElements, (trackedElement: Element) => {
-      return extractQuadraticCurve(trackedElement)
-    })
-  )
 
   updateAllControlPoints = () => {
     this._updateControlPointsY()
   }
-
 }

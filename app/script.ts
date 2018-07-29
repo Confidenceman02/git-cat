@@ -1,17 +1,14 @@
 import "./style.css";
 import { Tracker } from './curveHelpers'
 
-// select quadratic curves that shape eyes
-const bottomLeftEyeElement: HTMLElement = document.querySelector('#bottom-left-eye')
-const topLeftEyeElement: HTMLElement = document.querySelector('#top-left-eye')
-const bottomRightEyeElement: HTMLElement = document.querySelector('#bottom-right-eye')
-const topRightEyeElement: HTMLElement = document.querySelector('#top-right-eye')
+const D = document
 
-// control point markers
-const bottomLeftEyeMarkerElement = document.querySelector('#bottom-left-eye-marker')
-const topLeftEyeMarkerElement = document.querySelector('#top-left-eye-marker')
-const bottomRightEyeMarkerElement = document.querySelector('#bottom-right-eye-marker')
-const topRightEyeMarkerElement = document.querySelector('#top-right-eye-marker')
+const $ = D.querySelector.bind(D)
+// select quadratic curves that shape eyes
+const bottomLeftEyeElement: HTMLElement = $('#bottom-left-eye')
+const topLeftEyeElement: HTMLElement = $('#top-left-eye')
+const bottomRightEyeElement: HTMLElement = $('#bottom-right-eye')
+const topRightEyeElement: HTMLElement = $('#top-right-eye')
 
 const gitCat: HTMLElement = document.getElementById('gitcat')
 gitCat.style.display = "block"
@@ -20,7 +17,7 @@ const trackedElements = new Tracker(
   {
     trackedElements: document.getElementsByClassName('eye'),
     displayTrackedElements: true,
-    displayControlPoints: false
+    displayControlPoints: true
   }
 )
 
