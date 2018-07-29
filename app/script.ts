@@ -1,5 +1,5 @@
 import "./style.css";
-import { extractQuadraticCurve } from './curveHelpers'
+import { Tracker } from './curveHelpers'
 
 // select quadratic curves that shape eyes
 const bottomLeftEyeElement: HTMLElement = document.querySelector('#bottom-left-eye')
@@ -12,6 +12,17 @@ const bottomLeftEyeMarkerElement = document.querySelector('#bottom-left-eye-mark
 const topLeftEyeMarkerElement = document.querySelector('#top-left-eye-marker')
 const bottomRightEyeMarkerElement = document.querySelector('#bottom-right-eye-marker')
 const topRightEyeMarkerElement = document.querySelector('#top-right-eye-marker')
+
+const gitCat: HTMLElement = document.getElementById('gitcat')
+gitCat.style.display = "block"
+
+const trackedElements = new Tracker(
+  {
+    trackedElements: document.getElementsByClassName('eye'),
+    displayTrackedElements: true,
+    displayControlPoints: false
+  }
+)
 
 // anything from 0 - 1 below .5 ideal for smoothness
 let t: number = .3
@@ -31,26 +42,15 @@ let topEyeControlPointMinY: number = 249
 
 let frame = null
 const openEyes = (): void => {
-  bottomLeftEyeElement.style.display = 'block'
   bottomLeftEyeElement.setAttribute('d', `M175,230 Q185,${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()} 245,265`)
-  // bottomLeftEyeMarkerElement.style.display = 'block'
-  bottomLeftEyeMarkerElement.setAttribute('cy', `${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()}`)
 
-  topLeftEyeElement.style.display = 'block'
   topLeftEyeElement.setAttribute('d', `M175,230 Q225,${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()} 245,265`)
-  // topLeftEyeMarkerElement.style.display = 'block'
-  topLeftEyeMarkerElement.setAttribute('cy', `${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()}`)
 
-  bottomRightEyeElement.style.display = 'block'
-  bottomRightEyeElement.setAttribute('d', `M267,265 Q327 ${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()} 337,230`)
-  // bottomRightEyeMarkerElement.style.display = 'block'
-  bottomRightEyeMarkerElement.setAttribute('cy', `${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()}`)
+  bottomRightEyeElement.setAttribute('d', `M267,265 Q327,${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()} 337,230`)
 
-  topRightEyeElement.style.display = 'block'
   topRightEyeElement.setAttribute('d', `M267, 265 Q287,${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()} 337,230`)
-  // topRightEyeMarkerElement.style.display = 'block'
-  topRightEyeMarkerElement.setAttribute('cy', `${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()}`)
 
+  trackedElements.updateAllControlPoints()
   frame = requestAnimationFrame(openEyes)
 
   t += .019
@@ -68,17 +68,14 @@ const openEyes = (): void => {
 
 const angryEyes = () => {
   bottomLeftEyeElement.setAttribute('d', `M175,230 Q185,${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()} 245,265`)
-  bottomLeftEyeMarkerElement.setAttribute('cy', `${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()}`)
 
   topLeftEyeElement.setAttribute('d', `M175,230 Q225,${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()} 245,265`)
-  topLeftEyeMarkerElement.setAttribute('cy', `${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()}`)
 
   bottomRightEyeElement.setAttribute('d', `M267,265 Q327 ${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()} 337,230`)
-  bottomRightEyeMarkerElement.setAttribute('cy', `${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()}`)
 
   topRightEyeElement.setAttribute('d', `M267, 265 Q287,${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()} 337,230`)
-  topRightEyeMarkerElement.setAttribute('cy', `${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()}`)
 
+  trackedElements.updateAllControlPoints()
   frame = requestAnimationFrame(angryEyes)
 
   t += .06
@@ -96,17 +93,14 @@ const angryEyes = () => {
 
 const blinkClose = () => {
   bottomLeftEyeElement.setAttribute('d', `M175,230 Q185,${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()} 245,265`)
-  bottomLeftEyeMarkerElement.setAttribute('cy', `${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()}`)
 
   topLeftEyeElement.setAttribute('d', `M175,230 Q225,${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()} 245,265`)
-  topLeftEyeMarkerElement.setAttribute('cy', `${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()}`)
 
   bottomRightEyeElement.setAttribute('d', `M267,265 Q327 ${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()} 337,230`)
-  bottomRightEyeMarkerElement.setAttribute('cy', `${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()}`)
 
   topRightEyeElement.setAttribute('d', `M267, 265 Q287,${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()} 337,230`)
-  topRightEyeMarkerElement.setAttribute('cy', `${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()}`)
 
+  trackedElements.updateAllControlPoints()
   frame = requestAnimationFrame(blinkClose)
   t += .05
   if (t > 1) {
@@ -122,19 +116,15 @@ const blinkClose = () => {
 }
 
 const blinkOpen = () => {
-  console.log('blinkOpen')
   bottomLeftEyeElement.setAttribute('d', `M175,230 Q185,${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()} 245,265`)
-  bottomLeftEyeMarkerElement.setAttribute('cy', `${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()}`)
 
   topLeftEyeElement.setAttribute('d', `M175,230 Q225,${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()} 245,265`)
-  topLeftEyeMarkerElement.setAttribute('cy', `${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()}`)
 
   bottomRightEyeElement.setAttribute('d', `M267,265 Q327 ${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()} 337,230`)
-  bottomRightEyeMarkerElement.setAttribute('cy', `${lerp(t, bottomEyeControlPointMinY, bottomEyeControlPointMaxY).toString()}`)
 
   topRightEyeElement.setAttribute('d', `M267, 265 Q287,${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()} 337,230`)
-  topRightEyeMarkerElement.setAttribute('cy', `${lerp(t, topEyeControlPointMinY, topEyeControlPointMaxY).toString()}`)
 
+  trackedElements.updateAllControlPoints()
   frame = requestAnimationFrame(blinkOpen)
   t += .05
   if (t > 1) {
