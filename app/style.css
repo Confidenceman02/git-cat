@@ -12,3 +12,10 @@ body, h1, h2, h3, h4, h5, h6, p, ol, ul {
   width: 340px;
   height: 460px;
 }
+
+#drawing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -1,4 +1,3 @@
-
 import anime from "animejs";
 
 const fireworks = document.getElementById("fireworksContainer");

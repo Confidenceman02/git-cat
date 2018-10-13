@@ -1,8 +1,22 @@
-import { QuadraticCoords } from './types';
+import { QuadraticCoords, CubicCoords, XYCoord, CubicAxis } from './types';
 
 const quadraticRegex = RegExp(/^Q/ || /^q/)
+const cubicRegex = RegExp(/^C/ || /^c/)
 
 const isQuadraticCurve = (coordinates: string) => (quadraticRegex.test(coordinates))
+
+export const coordsToXYTuple = (coords: CubicAxis[]): XYCoord[] => {
+  let splitCoords: XYCoord[] = [] 
+  for(let i = 0; i < coords.length; i++) {
+    let currentElement = coords[i]
+    currentElement.reduce((acc: XYCoord[], value: string): XYCoord[] => {
+      let splitCoord = value.split(',')
+      acc.push([splitCoord[0], splitCoord[1]])
+      return splitCoords 
+    }, splitCoords)
+  }
+  return splitCoords
+}
 
 const extractQuadraticCurve = (svgElement: Element): string => {
   const svgShapeCoordinates: string = svgElement.getAttribute('d')
@@ -19,7 +33,7 @@ const extractQuadraticYAxis = (quadCoord: string): string => {
   return quadCoord.split(",")[QuadraticCoords.ControlPointY]
 }
 
-const getAttributeValue = (element: Element, attribute: string): string => {
+export const getAttributeValue = (element: Element, attribute: string): string => {
   return element.getAttribute(attribute)
 }
 

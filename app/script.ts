@@ -1,8 +1,12 @@
 import "./style.css";
-import { Tracker } from './curveHelpers'
+import { Tracker, coordsToXYTuple } from './curveHelpers'
+import { BatchCircleAttributes } from './VDTypes'
+import { VectorDraw } from './VectorDraw'
+import { VectorAnalyze } from './VectorAnalyze'
+import { XYCoord } from './types'
 
 const D = document
-
+const ns = 'http://www.w3.org/2000/svg'
 const $ = D.querySelector.bind(D)
 // select quadratic curves that shape eyes
 const bottomLeftEyeElement: HTMLElement = $('#bottom-left-eye')
@@ -10,8 +14,23 @@ const topLeftEyeElement: HTMLElement = $('#top-left-eye')
 const bottomRightEyeElement: HTMLElement = $('#bottom-right-eye')
 const topRightEyeElement: HTMLElement = $('#top-right-eye')
 
-const gitCat: HTMLElement = document.getElementById('gitcat')
+// github elment
+
+const gitCat: HTMLElement = $('#gitcat')
 gitCat.style.display = "block"
+
+let circle = new VectorDraw
+let vector = new VectorAnalyze
+const gitCatVector = vector.analyze({targetId: 'gitcat', attribute: 'd'})
+const batchedCubicCoords: XYCoord[] = coordsToXYTuple(gitCatVector.fetchCubicCurves())
+
+const batchCubicAttributes: BatchCircleAttributes = batchedCubicCoords.map((coordTuple) => (
+  {fill: '#f06', cx: coordTuple[0], cy: coordTuple[1], r: '3'}
+))
+
+circle.createSvg({svgType: 'circle', targetId: 'drawing'})
+  .batchAttributes(batchCubicAttributes, { listener: 'mouseover', handler: (event) => console.log(event.offsetX, event.offsetY) })
+  .batchDraw()
 
 const trackedElements = new Tracker(
   {
